@@ -1,48 +1,72 @@
 import Image from "next/image";
+import { Button, Dropdown, DropdownItem, HelperText, Label, TextInput } from "flowbite-react";
+import updateUserProfile from "./server";
 
 export default function Home() {
+
+  async function submitSurvey(formData: FormData) {
+    'use server';
+
+    const rawFormData = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      age: formData.get("age"),
+      gender: formData.get("gender"),
+    }
+    await updateUserProfile(rawFormData)
+  }
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+        {/* Main Form Component */}
+        <form className="flex max-w-md flex-col gap-4" action={submitSurvey}>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="firstName">First Name</Label>
+            </div>
+            <HelperText>
+              Enter first name.
+            </HelperText>
+            <TextInput name="firstName" id="firstName" type="text" sizing="md" />
+          </div>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="lastName">Last Name</Label>
+            </div>
+            <HelperText>
+              Enter last name.
+            </HelperText>
+            <TextInput name="lastName" id="lastName" type="text" sizing="md" />
+          </div>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="age">Age</Label>
+            </div>
+            <HelperText>
+              Enter age.
+            </HelperText>
+            <TextInput name="age" id="age" type="text" sizing="md" />
+          </div>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="gender">Gender</Label>
+            </div>
+            <HelperText>
+              Enter gender.
+            </HelperText>
+            {/* On select update the label */}
+            <Dropdown name="gender" id="gender" label="Select a gender">
+              <DropdownItem value="male">Male</DropdownItem>
+              <DropdownItem value="female">Female</DropdownItem>
+              <DropdownItem value="other">Other</DropdownItem>
+            </Dropdown>
+          </div>
+
+          <Button type="submit">Submit</Button>
+        </form>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
